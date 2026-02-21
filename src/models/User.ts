@@ -26,12 +26,14 @@ const userSchema = new Schema(
             type: String,
             required: false,
             unique: true
-        }
-    },
-    {
-        timestamps: true,
-    }
-);
+        },
+        favorites: [{ 
+        type: Schema.Types.ObjectId, 
+        ref: 'Recipe' 
+    }]
+}, {
+    timestamps: true
+});
 
 type UserType = InferSchemaType<typeof userSchema>;
 
