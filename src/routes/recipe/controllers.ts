@@ -40,7 +40,7 @@ export const createRecipe = async (req: CustomRequest, res: Response) => {
 export const getAllRecipes = async (req: Request, res: Response) => {
     try {
         const { search } = req.query;
-        let query: any = { active: true };
+        let query: any = { isActive: true };
 
         if (search) {
             query = {
@@ -52,7 +52,7 @@ export const getAllRecipes = async (req: Request, res: Response) => {
             };
         }
 
-        const recipes = await Recipe.find(query).populate('user', 'username');
+        const recipes = await Recipe.find(query).populate('user', 'name');
         res.status(200).json({ data: recipes, error: false });
     } catch (error) {
         res.status(500).json({ message: "Error al obtener recetas", error: true });
