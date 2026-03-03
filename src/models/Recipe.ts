@@ -17,6 +17,10 @@ const recipeSchema = new Schema(
             required: true,
             trim: true,
         },
+        instructions: {
+        type: String,
+        required: true,
+        },
         image: {
             type: String,
         },

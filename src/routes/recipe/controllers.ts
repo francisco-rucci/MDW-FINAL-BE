@@ -5,7 +5,7 @@ import { CustomRequest } from "../../middlewares/auth";
 export const createRecipe = async (req: CustomRequest, res: Response) => {
     try {
 
-        const { title, description, ingredients, image } = req.body;
+        const { title, description, ingredients, instructions, image } = req.body;
 
         const firebaseUid = req.user?.uid;
 
@@ -18,6 +18,7 @@ export const createRecipe = async (req: CustomRequest, res: Response) => {
             title,
             description,
             ingredients,
+            instructions,
             image,
             user: user._id,
         });
@@ -26,7 +27,7 @@ export const createRecipe = async (req: CustomRequest, res: Response) => {
 
         res.status(201).json({
             message: "Receta creada exitosamente",
-            data: recipe,
+            data: recipe,   
             error: false,
         });
     } catch (error) {
@@ -99,11 +100,11 @@ export const updateRecipe = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
 
-        const { title, description, ingredients, image } = req.body;
+        const { title, description, ingredients, instructions, image } = req.body;
 
         const updatedRecipe = await Recipe.findByIdAndUpdate(
             id,
-            { title, description, ingredients, image },
+            { title, description, ingredients, instructions, image },
             { new: true }
         );
 
@@ -188,4 +189,33 @@ export const toggleFavoriteRecipe = async (req: CustomRequest, res: Response) =>
     }
 };
 
-export default { createRecipe, getAllRecipes, hardDeleteRecipe, softDeleteRecipe, updateRecipe, getMyRecipes, getRecipeById, toggleFavoriteRecipe};
+export const getAllRecipesAdmin = async (req: Request, res: Response) => {
+    try {
+        const recipes = await Recipe.find().populate('user', 'name');
+        res.status(200).json({ data: recipes, error: false });
+    } catch (error) {
+        res.status(500).json({ message: "Error al obtener recetas para admin", error: true });
+    }
+};
+
+export const reactivateRecipe = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+
+        const recipe = await Recipe.findByIdAndUpdate(
+            id,
+            { isActive: true },
+            { new: true }
+        );
+
+        if (!recipe) {
+            return res.status(404).json({ message: "Receta no encontrada", error: true });
+        }
+
+        res.status(200).json({ message: "Receta reactivada correctamente", error: false });
+    } catch (error) {
+        res.status(500).json({ message: "Error al reactivar la receta", error: true });
+    }
+};
+
+export default { createRecipe, getAllRecipes, hardDeleteRecipe, softDeleteRecipe, updateRecipe, getMyRecipes, getRecipeById, toggleFavoriteRecipe, getAllRecipesAdmin, reactivateRecipe};

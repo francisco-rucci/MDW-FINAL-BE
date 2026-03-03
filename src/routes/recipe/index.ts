@@ -16,6 +16,10 @@ router.patch('/:id', verifyToken, validateRecipe, controllers.updateRecipe);
 
 router.post('/favorite/:id', verifyToken, controllers.toggleFavoriteRecipe);
 
+// Rutas de administración y eliminación
+router.get('/admin/all', verifyToken, controllers.getAllRecipesAdmin);
+router.patch('/reactivate/:id', verifyToken, controllers.reactivateRecipe);
+
 router.delete('/hard/:id', verifyToken, controllers.hardDeleteRecipe);
 router.patch('/soft/:id', verifyToken, controllers.softDeleteRecipe);
 

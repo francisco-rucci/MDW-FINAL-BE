@@ -16,6 +16,11 @@ const recipeSchema = Joi.object({
         'string.empty': 'Los ingredientes no pueden estar vacíos.',
         'any.required': 'Los ingredientes son obligatorios.'
     }),
+    instructions: Joi.string().min(10).required().messages({
+        'string.empty': 'Las instrucciones no pueden estar vacías.',
+        'string.min': 'Las instrucciones deben tener al menos 10 caracteres.',
+        'any.required': 'Las instrucciones son obligatorias.'
+    }),
     image: Joi.string().uri().optional().messages({
         'string.uri': 'La imagen debe ser una URL válida.'
     })
